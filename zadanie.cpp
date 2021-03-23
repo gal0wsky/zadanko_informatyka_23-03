@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <ctime>
 #include <cstdlib>
 using namespace std;
@@ -94,6 +95,54 @@ public:
     }
 };
 
+
+class Usluga
+{
+private:
+    string nazwa;
+    int cena;
+
+public:
+    Usluga()
+    {
+        this->nazwa = "";
+        this->cena = 0;
+    }
+
+    Usluga(string nazwa, int cena)
+    {
+        if (cena > 0)
+        {
+            this->nazwa = nazwa;
+            this->cena = cena;
+        }
+    }
+
+    void changeCena(int nowaCena)
+    {
+        if (nowaCena > 0)
+            this->cena = nowaCena;
+    }
+
+    int getCena()
+    {
+        return this->cena;
+    }
+
+    string getNazwa()
+    {
+        return this->nazwa;
+    }
+
+    map<string, int> get()
+    {
+        map<string, int> usluga;
+        usluga[this->nazwa] = this->cena;
+        return usluga;
+    }
+};
+
+
 class Klub
 {
 private:
@@ -103,6 +152,7 @@ private:
 public:
     string nazwa;
     string opis;
+    vector<Usluga> uslugi;
 
 public:
     Klub()
@@ -131,6 +181,14 @@ public:
         cout << "\t\t" << this->nazwa << endl;
         cout << "\t" << this->opis << endl;
         cout << endl;
+
+        cout << "Oto nasze uslugi:" << endl;
+        for (auto& usluga : this->uslugi)
+        {
+            cout << "-" << usluga.getNazwa() << " cena: " << usluga.getCena() << endl;
+        }
+
+        cout << endl;
         cout << "Oto klienci klubu " << this->nazwa << ":" << endl;
 
         for (Klient klient : this->klienci)
@@ -145,6 +203,11 @@ public:
         klient.setId(this->id.increment());
         this->klienci.push_back(klient);
     }
+
+    void dodajUsluge(Usluga * usluga)
+    {
+        this->uslugi.push_back(*usluga);
+    }
 };
 
 
@@ -158,6 +221,13 @@ int main()
 
     klub1.czytaj_dane();
     klub2.czytaj_dane();
+
+    klub1.dodajUsluge(new Usluga("aerobik", 40));
+    klub1.dodajUsluge(new Usluga("basen", 25));
+
+    klub2.dodajUsluge(new Usluga("trening", 20));
+    klub2.dodajUsluge(new Usluga("trener", 50));
+    klub2.dodajUsluge(new Usluga("masaz", 30));
 
     cout << "----------------------------------------------------------" << endl;
 
